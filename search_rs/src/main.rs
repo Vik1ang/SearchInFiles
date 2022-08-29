@@ -1,6 +1,7 @@
 use anyhow::{bail, Context, Result};
 use clap::Parser;
 use std::path::PathBuf;
+use walkdir::WalkDir;
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -9,6 +10,8 @@ struct Args {
     #[clap(long, parse(from_os_str))]
     path: Option<PathBuf>,
 }
+
+const SEARCH_FILE_EXTENSION: Vec<String> = vec![];
 
 fn main() -> Result<()> {
     let args = Args::parse();
@@ -38,16 +41,19 @@ fn main() -> Result<()> {
     let lst_size = file_lists.len();
     let pb = indicatif::ProgressBar::new(lst_size as u64);
     for i in 0..lst_size {
-        let content = std::fs::read_to_string(&file_lists[i])
-            .with_context(|| format!("could not read file `{:?}`", &file_lists[i]))?;
+        let content = std::fs::read_to_string(&file_lists[i]);
+        let content = match content {
+            Ok(s) => s,
+            Err(_) => format!("")
+        };
         for line in content.lines() {
             if line.contains(&pattern) {
-                println!("{}", line);
+                println!("file: [{:?}], content: {}", &file_lists[i], line);
             }
         }
         // thread::sleep(Duration::from_secs(1));
         // pb.println(format!("[+] finished #{}", i));
-        pb.inc(1);
+        // pb.inc(1);
     }
     pb.finish_with_message("done");
 
@@ -63,14 +69,17 @@ fn main() -> Result<()> {
 // }
 
 fn get_folder_files(path: &PathBuf, lst: &mut Vec<PathBuf>) {
-    for entry in path.read_dir().expect("read_dir call failed") {
-        if let Ok(entry) = entry {
-            if path.is_dir() {
-                // get_folder_files(path, lst);
-            } else if path.is_file() {
-                lst.push(entry.path());
-            }
-            println!("{:?}", entry.path());
-        }
+    for entry in WalkDir::new(path.to_str().unwrap())
+        .follow_links(true)
+        .into_iter()
+        .filter_map(|e| e.ok()) {
+        // let f_name = &entry.file_name().to_string_lossy();
+        // let sec = entry.metadata()?.modified()?;
+        // if SEARCH_FILE_EXTENSION.contains(&a) {
+        //
+        // }
+        // println!("{}", f_name);
+        // println!("{:?}", entry.clone().into_path());
+        lst.push(entry.into_path());
     }
 }
