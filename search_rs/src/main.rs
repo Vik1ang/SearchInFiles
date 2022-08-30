@@ -3,6 +3,8 @@ use clap::Parser;
 use std::path::PathBuf;
 use walkdir::WalkDir;
 
+use is_executable::is_executable;
+
 #[derive(Parser, Debug)]
 struct Args {
     #[clap(short, value_parser)]
@@ -44,7 +46,7 @@ fn main() -> Result<()> {
         let content = std::fs::read_to_string(&file_lists[i]);
         let content = match content {
             Ok(s) => s,
-            Err(_) => format!("")
+            Err(_) => format!(""),
         };
         for line in content.lines() {
             if line.contains(&pattern) {
@@ -60,7 +62,6 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-
 // fn validate_pattern(pattern: Option<String>) -> Result<String, String> {
 //     match pattern {
 //         Some(p) => Ok(p.to_string()),
@@ -72,14 +73,10 @@ fn get_folder_files(path: &PathBuf, lst: &mut Vec<PathBuf>) {
     for entry in WalkDir::new(path.to_str().unwrap())
         .follow_links(true)
         .into_iter()
-        .filter_map(|e| e.ok()) {
-        // let f_name = &entry.file_name().to_string_lossy();
-        // let sec = entry.metadata()?.modified()?;
-        // if SEARCH_FILE_EXTENSION.contains(&a) {
-        //
-        // }
-        // println!("{}", f_name);
-        // println!("{:?}", entry.clone().into_path());
-        lst.push(entry.into_path());
+        .filter_map(|e| e.ok())
+    {
+        if !is_executable(entry.path()) {
+            lst.push(entry.into_path());
+        }
     }
 }
