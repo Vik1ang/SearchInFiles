@@ -1,6 +1,7 @@
 use anyhow::{bail, Result};
 use clap::Parser;
 use colored::Colorize;
+use indicatif::ProgressStyle;
 use std::path::PathBuf;
 use walkdir::WalkDir;
 
@@ -38,6 +39,13 @@ fn main() -> Result<()> {
 
     let lst_size = file_lists.len();
     let pb = indicatif::ProgressBar::new(lst_size as u64);
+    pb.set_style(
+        ProgressStyle::with_template(
+            "[{elapsed_precise}] {bar:40.cyan/blue} {pos:>7}/{len:7} {msg}",
+        )
+        .unwrap()
+        .progress_chars("##-"),
+    );
     for i in 0..lst_size {
         let content = std::fs::read_to_string(&file_lists[i]);
         let content = match content {
@@ -66,9 +74,9 @@ fn main() -> Result<()> {
         }
         // thread::sleep(Duration::from_secs(1));
         // pb.println(format!("[+] finished #{}", i));
-        // pb.inc(1);
+        pb.inc(1);
     }
-    pb.finish_with_message("done");
+    pb.finish();
 
     Ok(())
 }
