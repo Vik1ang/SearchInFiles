@@ -1,5 +1,6 @@
-use anyhow::{bail, Context, Result};
+use anyhow::{bail, Result};
 use clap::Parser;
+use colored::Colorize;
 use std::path::PathBuf;
 use walkdir::WalkDir;
 
@@ -13,7 +14,7 @@ struct Args {
     path: Option<PathBuf>,
 }
 
-const SEARCH_FILE_EXTENSION: Vec<String> = vec![];
+// const SEARCH_FILE_EXTENSION: Vec<String> = vec![];
 
 fn main() -> Result<()> {
     let args = Args::parse();
@@ -35,11 +36,6 @@ fn main() -> Result<()> {
         bail!("Error location")
     }
 
-    // for line in content.lines() {
-    //     if line.contains(&pattern) {
-    //         println!("{}", line);
-    //     }
-    // }
     let lst_size = file_lists.len();
     let pb = indicatif::ProgressBar::new(lst_size as u64);
     for i in 0..lst_size {
@@ -48,9 +44,24 @@ fn main() -> Result<()> {
             Ok(s) => s,
             Err(_) => format!(""),
         };
+        let file_name = file_lists[i].to_str().unwrap();
+        if content.is_empty() {
+            continue;
+        }
+        // } else {
+        //     // println!("=======================\n\r");
+        //     println!("{}", file_name.bold().underline());
+        // }
+        let mut first = true;
         for line in content.lines() {
             if line.contains(&pattern) {
-                println!("file: [{:?}], content: {}", &file_lists[i], line);
+                // TODO
+                if first {
+                    println!("{}", file_name.bold().underline());
+                    first = false;
+                }
+                let output = line.replace(&pattern, &*format!("{}", &pattern.green().bold()));
+                println!("content: {}", output);
             }
         }
         // thread::sleep(Duration::from_secs(1));
