@@ -1,6 +1,6 @@
 use clap::Parser;
 use indicatif::ProgressStyle;
-use search_rs::adapter::normal::NormalFileType;
+use search_rs::adapter::normal::normal::NormalFileType;
 use search_rs::adapter::pdf::pdf::PdfFileType;
 use search_rs::adapter::SearchIn;
 use search_rs::file::FileMata;
