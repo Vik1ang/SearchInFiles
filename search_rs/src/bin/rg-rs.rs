@@ -1,7 +1,7 @@
-use std::fs;
 use clap::Parser;
-use colored::Colorize;
 use indicatif::ProgressStyle;
+use search_rs::adapter::normal::NormalFileType;
+use search_rs::adapter::SearchIn;
 use search_rs::file::FileMata;
 use std::path::PathBuf;
 
@@ -38,36 +38,13 @@ fn main() -> anyhow::Result<()> {
         ProgressStyle::with_template(
             "[{elapsed_precise}] {bar:40.cyan/blue} {pos:>7}/{len:7} {msg}",
         )
-            .unwrap()
-            .progress_chars("##-"),
+        .unwrap()
+        .progress_chars("##-"),
     );
 
     for file in file_lists {
-        let file_content = std::fs::read_to_string(&file.path);
-        let file_content = match file_content {
-            Ok(s) => s,
-            Err(_) => format!(""),
-        };
-
-        if file_content.is_empty() {
-            continue;
-        }
-        let mut is_first = true;
-        for line_tup in file_content.lines().enumerate() {
-            let index = line_tup.0 + 1;
-            let line = line_tup.1;
-            if line.contains(&pattern) {
-                if is_first {
-                    let file_name = fs::canonicalize(&file.path);
-                    let file_name = file_name.unwrap().to_str().unwrap().to_string();
-                    println!("{}", file_name.bold().blue().underline());
-                    is_first = false;
-                }
-                let output =
-                    line.replace(&pattern, &*format!("{}", &pattern.on_bright_red().bold()));
-                println!("{}\t{}", format!("{}", index.to_string().cyan()), output);
-            }
-        }
+        let file_type = NormalFileType::new(file, String::from(&pattern));
+        file_type.search_in();
         bar.inc(1);
     }
     bar.finish();
