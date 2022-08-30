@@ -57,7 +57,7 @@ fn main() -> Result<()> {
             if line.contains(&pattern) {
                 // TODO
                 if first {
-                    println!("{}", file_name.bold().underline());
+                    println!("{}", file_name.bold().blue().underline());
                     first = false;
                 }
                 let output = line.replace(&pattern, &*format!("{}", &pattern.green().bold()));
