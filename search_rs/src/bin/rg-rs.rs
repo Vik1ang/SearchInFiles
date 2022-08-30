@@ -4,6 +4,7 @@ use search_rs::adapter::normal::NormalFileType;
 use search_rs::adapter::SearchIn;
 use search_rs::file::FileMata;
 use std::path::PathBuf;
+use search_rs::adapter::pdf::PdfFileType;
 
 use search_rs::utils::get_folder_files;
 
@@ -38,13 +39,18 @@ fn main() -> anyhow::Result<()> {
         ProgressStyle::with_template(
             "[{elapsed_precise}] {bar:40.cyan/blue} {pos:>7}/{len:7} {msg}",
         )
-        .unwrap()
-        .progress_chars("##-"),
+            .unwrap()
+            .progress_chars("##-"),
     );
 
     for file in file_lists {
-        let file_type = NormalFileType::new(file, String::from(&pattern));
-        file_type.search_in();
+        if file.extension == "pdf" {
+            let file_type = PdfFileType::new(file, String::from(&pattern));
+            file_type.search_in();
+        } else {
+            let file_type = NormalFileType::new(file, String::from(&pattern));
+            file_type.search_in();
+        }
         bar.inc(1);
     }
     bar.finish();
