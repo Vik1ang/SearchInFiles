@@ -1,12 +1,11 @@
 use clap::Parser;
 use indicatif::ProgressStyle;
 use search_rs::adapter::normal::NormalFileType;
+use search_rs::adapter::pdf::pdf::PdfFileType;
 use search_rs::adapter::SearchIn;
 use search_rs::file::FileMata;
-use std::path::PathBuf;
-use search_rs::adapter::pdf::PdfFileType;
-
 use search_rs::utils::get_folder_files;
+use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -39,8 +38,8 @@ fn main() -> anyhow::Result<()> {
         ProgressStyle::with_template(
             "[{elapsed_precise}] {bar:40.cyan/blue} {pos:>7}/{len:7} {msg}",
         )
-            .unwrap()
-            .progress_chars("##-"),
+        .unwrap()
+        .progress_chars("##-"),
     );
 
     for file in file_lists {

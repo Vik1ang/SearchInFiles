@@ -1,6 +1,6 @@
+use colored::Colorize;
 use std::fs;
 use std::path::PathBuf;
-use colored::Colorize;
 
 pub mod normal;
 pub mod pdf;
@@ -21,10 +21,7 @@ fn print_output(file_content: String, pattern: String, path: PathBuf) {
                 println!("{}", file_name.bold().blue().underline());
                 is_first = false;
             }
-            let output = line.replace(
-                &pattern,
-                &*format!("{}", &pattern.on_bright_red().bold()),
-            );
+            let output = line.replace(&pattern, &*format!("{}", &pattern.on_bright_red().bold()));
             println!("{}\t{}", format!("{}", index.to_string().cyan()), output);
         }
     }
