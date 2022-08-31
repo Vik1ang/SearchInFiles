@@ -17,3 +17,4 @@ colored = "2"
 pyo3 = { version = "0.17.1", features = ["extension-module"] }
 calamine = "0.18.0"
 dotext = "0.1.1"
+rayon = "1.5.3"

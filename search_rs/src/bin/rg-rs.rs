@@ -44,19 +44,23 @@ fn main() -> anyhow::Result<()> {
         .progress_chars("##-"),
     );
 
+    let pool = rayon::ThreadPoolBuilder::new()
+        .num_threads(8)
+        .build()
+        .unwrap();
     for file in file_lists {
         if file.extension == "pdf" {
             let file_type = PdfFileType::new(file, String::from(&pattern));
-            file_type.search_in();
+            pool.install(|| file_type.search_in());
         } else if file.extension == "xlsx" || file.extension == "xls" {
             let file_type = ExcelFileType::new(file, String::from(&pattern));
-            file_type.search_in();
+            pool.install(|| file_type.search_in());
         } else if ["docx", "doc"].contains(&&file.extension.as_str()) {
             let file_type = WordFileType::new(file, String::from(&pattern));
-            file_type.search_in()
+            pool.install(|| file_type.search_in());
         } else {
             let file_type = NormalFileType::new(file, String::from(&pattern));
-            file_type.search_in();
+            pool.install(|| file_type.search_in());
         }
         bar.inc(1);
     }
