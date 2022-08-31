@@ -2,9 +2,9 @@ use colored::Colorize;
 use std::fs;
 use std::path::PathBuf;
 
+pub mod excel;
 pub mod normal;
 pub mod pdf;
-pub mod excel;
 
 pub trait SearchIn {
     fn search_in(&self);
