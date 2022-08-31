@@ -1,7 +1,6 @@
 use crate::adapter::{print_output, SearchIn};
 use crate::file::FileMata;
-use calamine::DataType::Empty;
-use calamine::{open_workbook, DataType, RangeDeserializerBuilder, Reader, Xls, Xlsx};
+use calamine::{open_workbook, Reader, Xls, Xlsx};
 use std::path::PathBuf;
 
 pub struct ExcelFileType {
