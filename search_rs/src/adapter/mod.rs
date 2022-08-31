@@ -5,6 +5,7 @@ use std::path::PathBuf;
 pub mod excel;
 pub mod normal;
 pub mod pdf;
+pub mod word;
 
 pub trait SearchIn {
     fn search_in(&self);

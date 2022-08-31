@@ -3,6 +3,7 @@ use indicatif::ProgressStyle;
 use search_rs::adapter::excel::excel::ExcelFileType;
 use search_rs::adapter::normal::normal::NormalFileType;
 use search_rs::adapter::pdf::pdf::PdfFileType;
+use search_rs::adapter::word::word::WordFileType;
 use search_rs::adapter::SearchIn;
 use search_rs::file::FileMata;
 use search_rs::utils::get_folder_files;
@@ -50,6 +51,9 @@ fn main() -> anyhow::Result<()> {
         } else if file.extension == "xlsx" || file.extension == "xls" {
             let file_type = ExcelFileType::new(file, String::from(&pattern));
             file_type.search_in();
+        } else if ["docx", "doc"].contains(&&file.extension.as_str()) {
+            let file_type = WordFileType::new(file, String::from(&pattern));
+            file_type.search_in()
         } else {
             let file_type = NormalFileType::new(file, String::from(&pattern));
             file_type.search_in();
