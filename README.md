@@ -1,5 +1,14 @@
 # SearchInFiles
 
+Search content in files
+
+## Feature
+
++ Custom editable file
++ pdf
++ xlsx, xls
++ docx, doc
+
 ## Roadmap
 
 + **pdf lib alternatives** I do not find a suitable lib to extract pdf files in string like other languages, so i have to use python,
@@ -11,6 +20,10 @@
 + **GUI** trying to use `tauri` to do the GUI.
 
 + **ZIP** Current not support for zip file.
+
++ For MS office file, some xlsx are not MS can not support
+
++ Refactor code
 
 ## Usage
 
