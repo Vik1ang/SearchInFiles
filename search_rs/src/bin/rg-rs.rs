@@ -40,8 +40,8 @@ fn main() -> anyhow::Result<()> {
         ProgressStyle::with_template(
             "[{elapsed_precise}] {bar:40.cyan/blue} {pos:>7}/{len:7} {msg}",
         )
-        .unwrap()
-        .progress_chars("##-"),
+            .unwrap()
+            .progress_chars("##-"),
     );
 
     let pool = rayon::ThreadPoolBuilder::new()
@@ -51,18 +51,29 @@ fn main() -> anyhow::Result<()> {
     for file in file_lists {
         if file.extension == "pdf" {
             let file_type = PdfFileType::new(file, String::from(&pattern));
-            pool.install(|| file_type.search_in());
+            pool.install(|| {
+                file_type.search_in();
+                bar.inc(1)
+            });
         } else if file.extension == "xlsx" || file.extension == "xls" {
             let file_type = ExcelFileType::new(file, String::from(&pattern));
-            pool.install(|| file_type.search_in());
+            pool.install(|| {
+                file_type.search_in();
+                bar.inc(1)
+            });
         } else if ["docx", "doc"].contains(&&file.extension.as_str()) {
             let file_type = WordFileType::new(file, String::from(&pattern));
-            pool.install(|| file_type.search_in());
+            pool.install(|| {
+                file_type.search_in();
+                bar.inc(1)
+            });
         } else {
             let file_type = NormalFileType::new(file, String::from(&pattern));
-            pool.install(|| file_type.search_in());
+            pool.install(|| {
+                file_type.search_in();
+                bar.inc(1)
+            });
         }
-        bar.inc(1);
     }
     bar.finish();
 
