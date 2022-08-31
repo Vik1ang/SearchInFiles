@@ -11,6 +11,7 @@ def extract_pdf(path: str):
 
     return content
 
+
 # if __name__ == '__main__':
 #     print(extract_pdf())
 #     print(extract_pdf(r'D:\Workspace\SearchInFiles\search_rs\examples\ReferenceCard.pdf'))
