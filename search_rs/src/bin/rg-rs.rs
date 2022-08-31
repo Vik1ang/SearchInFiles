@@ -1,5 +1,6 @@
 use clap::Parser;
 use indicatif::ProgressStyle;
+use search_rs::adapter::excel::excel::ExcelFileType;
 use search_rs::adapter::normal::normal::NormalFileType;
 use search_rs::adapter::pdf::pdf::PdfFileType;
 use search_rs::adapter::SearchIn;
@@ -45,6 +46,9 @@ fn main() -> anyhow::Result<()> {
     for file in file_lists {
         if file.extension == "pdf" {
             let file_type = PdfFileType::new(file, String::from(&pattern));
+            file_type.search_in();
+        } else if file.extension == "xlsx" || file.extension == "xls" {
+            let file_type = ExcelFileType::new(file, String::from(&pattern));
             file_type.search_in();
         } else {
             let file_type = NormalFileType::new(file, String::from(&pattern));
