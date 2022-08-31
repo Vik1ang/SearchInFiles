@@ -10,6 +10,9 @@ pub fn get_folder_files(path: &PathBuf, lst: &mut Vec<FileMata>) {
         .filter_map(|e| e.ok())
     {
         let file = FileMata::new(entry.into_path());
-        lst.push(file);
+        let file_name = file.path.file_name().unwrap().to_str().unwrap();
+        if !file_name.starts_with("~") {
+            lst.push(file);
+        }
     }
 }
