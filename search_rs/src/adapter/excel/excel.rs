@@ -17,7 +17,11 @@ impl ExcelFileType {
 impl SearchIn for ExcelFileType {
     fn search_in(&self) {
         if self.file_meta.extension == "xls" {
-            let mut wb: Xls<_> = open_workbook(&self.file_meta.path).unwrap();
+            let t = open_workbook(&self.file_meta.path);
+            if let Err(_) = t {
+                return;
+            }
+            let mut wb: Xls<_> = t.unwrap();
             let sheets = wb.worksheets();
             let mut file_content = String::new();
             for sht in sheets {

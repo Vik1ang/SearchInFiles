@@ -17,7 +17,11 @@ impl WordFileType {
 
 impl SearchIn for WordFileType {
     fn search_in(&self) {
-        let mut file = Docx::open(&self.file_meta.path).unwrap();
+        let file = Docx::open(&self.file_meta.path);
+        if let Err(_) = file {
+            return;
+        }
+        let mut file = file.unwrap();
         let mut file_content = String::new();
         file.read_to_string(&mut file_content)
             .expect("fail to read string");
